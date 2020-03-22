@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"
+      integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+      crossorigin=""
+    />
+    <script
+      src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"
+      integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="
+      crossorigin=""
+    ></script>
+    <style>
+      #mymap {
+        height: 500px;
+      }
+      * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Courier New", Courier, monospace;
+      }
+      header {
+        background-color: grey;
+      }
+      #latitude,
+      #longitude {
+        margin: 1%;
+      }
+      header {
+        padding: 1%;
+      }
+    </style>
+    <title>My Location</title>
+  </head>
+  <body>
+    <header>
+      <h1>Where am I?</h1>
+    </header>
+    <div id="latitude"></div>
+    <div id="longitude"></div>
+    <div id="mymap"></div>
+    <script>
+      if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(position => {
+          const lat = position.coords.latitude;
+          document.getElementById(
+            "latitude"
+          ).innerHTML = `<h2>Latitude: ${lat.toFixed(3)}&deg;</h2>`;
+          const long = position.coords.longitude;
+          document.getElementById(
+            "longitude"
+          ).innerHTML = `<h2>Longitude: ${long.toFixed(3)}&deg;</h2>`;
+          console.log(position.coords.latitude, position.coords.longitude);
+
+          const mymap = L.map("mymap").setView([lat, long], 15);
+          L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+            attribution:
+              '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          }).addTo(mymap);
+          L.marker([lat, long])
+            .addTo(mymap)
+            .bindPopup("I am here...")
+            .openPopup();
+        });
+      } else {
+        console.log("geolocation is not available");
+      }
+    </script>
+  </body>
+</html>
